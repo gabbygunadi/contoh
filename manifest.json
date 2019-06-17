@@ -1,0 +1,12 @@
+{
+  "name": "Simulasi Tabungan",
+  "short_name": "Tabungan",
+  "start_url": "/index.html",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fff",
+  "description": "UAS membuat simulasi tabungan",
+  "dir": "ltr",
+  "lang": "en-US"
+}

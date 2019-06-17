@@ -1,0 +1,113 @@
+<html lang="en" dir="ltr">
+  <head>
+    <title>Simulasi Tabungan</title>
+    <meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="manifest.json">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  </head>
+  <body>
+    <style type="text/css">
+      .a{
+        margin: 1%;
+      }
+
+      .b{
+          font-size: 60px;
+      }
+
+      /* tablet */
+      @media (min-width: 768px) and (max-width: 1023px) {
+          .b{
+              font-size: 30px;
+          }
+      }
+
+      /* smarphone */
+      @media (max-width: 767px) {
+          .b{
+              font-size: 15px;
+          }
+      }
+
+  	</style>
+    <img src="src/img/logo.png" style="width:100vw;">
+    <div class="a">
+  		Nama &nbsp <input type="text" id="nama" style="background-color: white;">
+  	</div>
+  	<div class="a">
+  		Usia &nbsp <input type="number" id="usia" value="0" style="background-color: white;">
+  	</div>
+  	<div class="a">
+  		Uang Awal Amount &nbsp <input type="number" id="amount" min="0" value="0" style="background-color: white;">
+  	</div>
+  	<div class="a">
+  		Suku Bunga per Tahun &nbsp <input type="number" id="suku_bunga" min="0" value = "0" style="background-color: white;">
+  	</div>
+    <div class="a">
+  	  Lama penyimpanan (dalam tahun) &nbsp <input type="number" id="lama_simpan" min="0"  value = "0" style="background-color: white;">
+  	</div>
+
+    <button type="button" class="a" id="count">Submit</button>
+
+    <h4 id="hasil" class="b"></h4>
+    <h4 class="b">History : </h4>
+    <h4 id="history" class="b"></h4>
+
+    <!-- PWA DEPENDACIES -->
+  	<link rel="js" type="/sw.js" href="">
+  	<script src="src/js/app.js"></script>
+    <script src="nomer2.js"></script>
+
+    <script>
+      var coba = new Tabungan("Gabby", "12346")
+      console.log("--- DATA AWAL ---")
+      console.log("Nama : " + coba.getnama)
+      console.log("ID : " + coba.getid)
+      console.log("Uang : " + coba.getuang)
+      coba.setuang = 10000
+      console.log("--- DATA BERUBAH ---")
+      console.log("Nama : " + coba.getnama)
+      console.log("ID : " + coba.getid)
+      console.log("Uang : " + coba.getuang)
+
+      console.log("HASIL : " + coba.hitung_bunga(10,5))
+
+      if(window.Worker){
+        const button = document.getElementById('count');
+        const result = document.getElementById('hasil');
+        const history = document.getElementById('history');
+
+        const worker = new Worker('hitung_worker.js');
+        data = JSON.parse(localStorage.getItem('History'));
+        if(data != "null"){
+          history.textContent = data;
+        }
+
+        button.onclick = function(){
+          amount = document.getElementById('amount').value;
+          bunga = document.getElementById('suku_bunga').value;
+          lama = document.getElementById('lama_simpan').value;
+          worker.postMessage([amount, bunga, lama]);
+          console.log('Posted to Worker');
+        }
+
+        worker.onmessage = function(e){
+          result.textContent = "Hasil Uang Akhir : " + e.data;
+          nama = document.getElementById('nama').value;
+          usia = document.getElementById('usia').value;
+          lama = document.getElementById('lama_simpan').value;
+          amount = document.getElementById('amount').value;
+          akhir = e.data - amount;
+
+          line = nama + " Usia " + usia + " Tahun, Menyimpan Uang Selama " + lama + " Tahun dengan Bunga Total " + akhir;
+          localStorage.setItem("History", JSON.stringify(line));
+          data = JSON.parse(localStorage.getItem('History'));
+          history.textContent = data;
+          console.log('Message received from worker');
+        }
+      }
+    </script>
+  </body>
+</html>
