@@ -34,3 +34,5 @@ class Tabungan{
 		return hasil
 	}
 }
+
+//Testing ada dek index.html bagian bawah
