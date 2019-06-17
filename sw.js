@@ -2,12 +2,12 @@ self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open('first-app').then(function(cache) {
       return cache.addAll([
-      '/Mobweb/UAS/index.html',
-      '/Mobweb/UAS/offline.html',
-      '/Mobweb/UAS/nomer2.js',
-      '/Mobweb/UAS/hitung_worker.js',
-      '/Mobweb/UAS/src/js/app.js',
-      '/Mobweb/UAS/src/img/logo.png',
+      '/index.html',
+      '/offline.html',
+      '/nomer2.js',
+      '/hitung_worker.js',
+      '/src/js/app.js',
+      '/src/img/logo.png',
       'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js',
       ]);
     })
@@ -22,7 +22,7 @@ self.addEventListener('fetch', function(event) {
       return response || fetch(event.request);
     }).catch(function() {
       // If both fail, show a generic fallback:
-      return caches.match('/Mobweb/UAS/offline.html');
+      return caches.match('/offline.html');
       // However, in reality you'd have many different
       // fallbacks, depending on URL & headers.
       // Eg, a fallback silhouette image for avatars.
